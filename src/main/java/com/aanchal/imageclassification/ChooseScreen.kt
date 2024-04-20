@@ -28,43 +28,14 @@ import java.nio.ByteBuffer
 
 @Composable
 fun ChooseScreen() {
-    val context = LocalContext.current
-
-    var photoUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
-
-    var bitmap by remember {
-        mutableStateOf<Bitmap?>(null)
-    }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
-        onResult = {
-            photoUri = it
-        }
+        
     )
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        photoUri?.let {
-            if (Build.VERSION.SDK_INT < 28)
-                bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
-            else {
-                val source = ImageDecoder.createSource(context.contentResolver, it)
-                bitmap = ImageDecoder.decodeBitmap(
-                    source,
-                    ImageDecoder.OnHeaderDecodedListener { decoder, info, source ->
-                        decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
-                        decoder.isMutableRequired = true
-                    })
-            }
-        }
-        // Background Image
         ElevatedCard(modifier = Modifier
             .align(Alignment.Center)
-            .height(500.dp)
-            .width(380.dp),
+            .height(400.dp)
+            .width(300.dp),
             elevation = CardDefaults.elevatedCardElevation(10.dp),
             content = {
                 Column(modifier = Modifier
@@ -79,16 +50,15 @@ fun ChooseScreen() {
                         bitmap?.let {
                             Image(
                                 bitmap = it.asImageBitmap(),
-                                contentDescription = "gallaryimage",
-                                Modifier.size(400.dp)
+                                contentDescription = "imageselection",
                             )
                         }
                     }else{
                         Image(
                             painter = painterResource(R.drawable.photo_gallary),
-                            contentDescription = "photo_Image",
+                            contentDescription = "imageclassification",
                             modifier = Modifier
-                                .size(300.dp),
+                                .size(200.dp),
                             contentScale = ContentScale.FillBounds
                         )
                     }
@@ -96,46 +66,22 @@ fun ChooseScreen() {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .padding(26.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        val scaledBitmap = bitmap?.let { Bitmap.createScaledBitmap(it, imageSize, imageSize, false) };
-                        if (scaledBitmap != null) {
                             var img by remember{ mutableStateOf("")}
                             NNAPIClass.classifyImage(context,scaledBitmap) {
                                 img = it
                             }
-                            Text(text = img,color = Color.Black, fontSize = 24.sp)
-                        }
-                        else{
-                            Text("No File selected", color = Color.Black, fontSize = 24.sp)
-                        }
+                            Text(text = img,color = Color.Black, fontSize = 34.sp)
+                        
+                        
+                            Text("No File Choosen yet", color = Color.Black, fontSize = 34.sp)
+                        
                     }
                 }
             }
         )
-        Spacer(modifier = Modifier.padding(20.dp))
-        // Content
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(80.dp)
-                    .padding(16.dp),
-                onClick = {
-                    launcher.launch("image/*")
-                },
-                content = {
-                    Text("Choose File", color = Color.Black)
-                }
-            )
-        }
     }
 }
