@@ -1,5 +1,4 @@
 package com.aanchal.imageclassification
-
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -31,37 +30,33 @@ fun ScreenImage() {
         cont = ActivityResultContracts.GetContent(),
         
     )
-        ElevatedCard(modifier = Modifier
+        Box(modifier = Modifier
             .align(Alignment.Center)
             .height(400.dp)
-            .width(300.dp),
-            elevation = CardDefaults.elevatedCardElevation(10.dp),
+            .width(300.dp)
             content = {
                 Column(modifier = Modifier
                     .fillMaxSize()
                     .align(Alignment.CenterHorizontally),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    verticalArrangement = Arrangement.Center
                 ) {
 
                         Image(
                             painter = painterResource(R.drawable.photo_gallary),
                             contentDescription = "imageclassification",
                             modifier = Modifier
-                                .size(200.dp),
-                            contentScale = ContentScale.FillBounds
+                                .size(200.dp)
                         )
                     
 
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(26.dp),
-                        verticalArrangement = Arrangement.Center
+                            .padding(26.dp)
                     ) {
                             var img by remember{ mutableStateOf("")}
                            
-                            Text(text = img,color = Color.Black, fontSize = 34.sp)
+                            Text(text = img,color = Color.Black, fontSize = 14.sp)
                         
                         
                             Text("No File Choosen yet", color = Color.Black, fontSize = 34.sp)
