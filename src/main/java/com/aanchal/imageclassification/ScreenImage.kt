@@ -24,12 +24,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aanchal.imageclassification.NNAPIClass.imageSize
-import java.nio.ByteBuffer
 
 @Composable
-fun ChooseScreen() {
+fun ScreenImage() {
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
+        cont = ActivityResultContracts.GetContent(),
         
     )
         ElevatedCard(modifier = Modifier
@@ -45,15 +44,6 @@ fun ChooseScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-
-                    if(bitmap!=null){
-                        bitmap?.let {
-                            Image(
-                                bitmap = it.asImageBitmap(),
-                                contentDescription = "imageselection",
-                            )
-                        }
-                    }else{
                         Image(
                             painter = painterResource(R.drawable.photo_gallary),
                             contentDescription = "imageclassification",
@@ -61,19 +51,16 @@ fun ChooseScreen() {
                                 .size(200.dp),
                             contentScale = ContentScale.FillBounds
                         )
-                    }
+                    
 
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(26.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        verticalArrangement = Arrangement.Center
                     ) {
                             var img by remember{ mutableStateOf("")}
-                            NNAPIClass.classifyImage(context,scaledBitmap) {
-                                img = it
-                            }
+                           
                             Text(text = img,color = Color.Black, fontSize = 34.sp)
                         
                         
